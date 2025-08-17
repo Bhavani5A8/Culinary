@@ -819,6 +819,115 @@ const customScrollbarStyles = `
   }
 `;
 
+// Badge Component
+export const Badge = ({ 
+  children, 
+  variant = 'default', 
+  size = 'md',
+  className = '',
+  ...props 
+}) => {
+  let badgeClasses = 'inline-flex items-center justify-center font-semibold rounded-full transition-all duration-200 ';
+  
+  switch (size) {
+    case 'sm':
+      badgeClasses += 'px-2 py-1 text-xs ';
+      break;
+    case 'lg':
+      badgeClasses += 'px-4 py-2 text-sm ';
+      break;
+    default:
+      badgeClasses += 'px-3 py-1 text-xs ';
+  }
+  
+  switch (variant) {
+    case 'primary':
+      badgeClasses += 'bg-orange-100 text-orange-800 border border-orange-200 ';
+      break;
+    case 'secondary':
+      badgeClasses += 'bg-gray-100 text-gray-800 border border-gray-200 ';
+      break;
+    case 'success':
+      badgeClasses += 'bg-green-100 text-green-800 border border-green-200 ';
+      break;
+    case 'warning':
+      badgeClasses += 'bg-yellow-100 text-yellow-800 border border-yellow-200 ';
+      break;
+    case 'error':
+      badgeClasses += 'bg-red-100 text-red-800 border border-red-200 ';
+      break;
+    default:
+      badgeClasses += 'bg-blue-100 text-blue-800 border border-blue-200 ';
+  }
+  
+  badgeClasses += className;
+  
+  return (
+    <span className={badgeClasses} {...props}>
+      {children}
+    </span>
+  );
+};
+
+// Progress Component
+export const Progress = ({ 
+  value = 0, 
+  max = 100, 
+  size = 'md',
+  variant = 'default',
+  showPercentage = false,
+  className = '',
+  ...props 
+}) => {
+  const percentage = Math.round((value / max) * 100);
+  
+  let containerClasses = 'w-full bg-gray-200 rounded-full overflow-hidden ';
+  let barClasses = 'h-full transition-all duration-300 ease-out ';
+  
+  switch (size) {
+    case 'sm':
+      containerClasses += 'h-2 ';
+      break;
+    case 'lg':
+      containerClasses += 'h-4 ';
+      break;
+    default:
+      containerClasses += 'h-3 ';
+  }
+  
+  switch (variant) {
+    case 'success':
+      barClasses += 'bg-green-500 ';
+      break;
+    case 'warning':
+      barClasses += 'bg-yellow-500 ';
+      break;
+    case 'error':
+      barClasses += 'bg-red-500 ';
+      break;
+    default:
+      barClasses += 'bg-gradient-to-r from-orange-500 to-pink-500 ';
+  }
+  
+  containerClasses += className;
+  
+  return (
+    <div className="w-full">
+      <div className={containerClasses} {...props}>
+        <div 
+          className={barClasses}
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
+      {showPercentage && (
+        <div className="text-sm text-gray-600 mt-1 text-right">
+          {percentage}%
+        </div>
+      )}
+    </div>
+  );
+};
+
 // Inject styles
 if (typeof document !== 'undefined') {
   const styleElement = document.createElement('style');
