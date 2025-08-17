@@ -10,11 +10,7 @@ import Footer from './Footer.js';
 
 // NEW ENHANCEMENT LAYERS - Additive only, no existing code modification
 import {
-  SmartRecommendationEngine,
-  EnhancedSearchBar,
-  PersonalizationDashboard,
   KitchenModeOverlay,
-  OfflineManager,
   ErrorBoundaryWrapper,
 } from './enhanced.js';
 
@@ -144,25 +140,7 @@ const CulinaryFest = () => {
             onToggle={handleKitchenModeToggle}
           />
         )}
-        {enhancedFeatures.offlineMode && (
-          <OfflineManager
-            recipesToCache={[]} // Pass relevant recipes to cache
-            onSyncStatusChange={() => console.log('Sync status changed')}
-          />
-        )}
-        {enhancedFeatures.personalization && (
-          <PersonalizationDashboard
-            userPreferences={userPreferences}
-            onUpdatePreferences={setUserPreferences}
-          />
-        )}
-        {enhancedFeatures.aiRecommendations && (
-          <SmartRecommendationEngine
-            userPreferences={userPreferences}
-            onRecommend={(recommendations) => console.log('New recommendations:', recommendations)}
-          />
-        )}
-
+ 
         {/* DEBUGGING/DEV UI FOR ENHANCEMENTS */}
         <div className="fixed bottom-4 right-4 z-50 p-4 bg-gray-900 text-white rounded-xl shadow-lg border border-gray-700">
           <h4 className="font-semibold mb-2">Toggle Enhancements</h4>

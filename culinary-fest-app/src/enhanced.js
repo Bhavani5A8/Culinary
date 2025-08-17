@@ -3,11 +3,11 @@ import {
   Search, Mic, MicOff, Camera, Filter, Grid, List, Eye, Heart, Bookmark,
   Clock, Users, Star, Trophy, Calendar, ShoppingCart, Play, Pause,
   Volume2, VolumeX, Download, Wifi, WifiOff, Settings, User, Bell,
-  ChefHat, Zap, TrendingUp, Share2, MessageCircle, Award,
+  ChefHat, Zap, TrendingUp, Share2, MessageCircle, Award, Crown, Sparkles,
   // New icons for missing components
   BarChart3, Globe, Mail, RefreshCw, ThumbsUp, Image, CheckCircle,
   Facebook, Twitter, Instagram, Copy, Layers, RotateCcw, Languages,
-  X, Send, Loader, AlertCircle, Plus, Minus, ArrowUp, ArrowDown, ArrowLeft, ArrowRight
+  X, Send, Loader, AlertCircle, Plus, Minus, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, ChevronDown
 } from 'lucide-react';
 import { OptimizedImage, Tooltip, Input, Button, Modal, Loading, Progress, Badge } from './ui';
 import { validateRecipe, getTrendingRecipes } from './recipeData';
