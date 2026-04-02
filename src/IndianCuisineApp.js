@@ -66,26 +66,20 @@ const Modal = ({ isOpen, onClose, title, children, size = 'lg' }) => {
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 bg-black/60 flex items-start justify-center overflow-y-auto p-4"
-      onClick={onClose}
-    >
-      <div
-        className={`relative bg-white rounded-2xl shadow-2xl w-full ${sizeClasses[size]} my-8`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h3 className="text-2xl font-bold text-gray-900">{title}</h3>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100 transition-colors"
-            aria-label="Close"
-          >
-            <X className="w-6 h-6" />
-          </button>
-        </div>
-        <div className="p-6">
-          {children}
+    <div className="fixed inset-0 z-50 overflow-y-auto">
+      <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <div className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" onClick={onClose} />
+        
+        <div className={`inline-block w-full ${sizeClasses[size]} my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-2xl rounded-2xl`}>
+          <div className="flex items-center justify-between p-6 border-b border-gray-200">
+            <h3 className="text-2xl font-bold text-gray-900">{title}</h3>
+            <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+              <X className="w-6 h-6" />
+            </button>
+          </div>
+          <div className="p-6">
+            {children}
+          </div>
         </div>
       </div>
     </div>
@@ -252,153 +246,130 @@ const RecipeModal = ({ selectedRecipeId, isOpen, onClose, getRecipeDetails }) =>
   const [saved, setSaved] = useState(false);
 
   const recipe = selectedRecipeId ? getRecipeDetails(selectedRecipeId) : null;
+  
+  if (!recipe) return null;
 
-  // Single guard — one unmount, no split renders
-  if (!isOpen || !recipe) return null;
-
-  const difficultyColor =
-    recipe.difficulty === 'Hard' ? 'bg-red-500 text-white' :
-    recipe.difficulty === 'Medium' ? 'bg-amber-500 text-white' :
-    'bg-green-500 text-white';
+  const tabs = [
+    { id: 'ingredients', label: 'Ingredients', icon: Utensils },
+    { id: 'instructions', label: 'Instructions', icon: BookOpen },
+    { id: 'nutrition', label: 'Nutrition', icon: Heart }
+  ];
 
   return (
-    <div
-      className="fixed inset-0 z-50 bg-black/60 flex items-start justify-center overflow-y-auto p-4"
-      onClick={onClose}
-    >
-      <div
-        className="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl my-8"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="flex items-start justify-between p-6 border-b border-gray-100">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900">{recipe.title}</h2>
-            <p className="text-sm text-gray-500 mt-1">{recipe.description}</p>
+    <Modal isOpen={isOpen} onClose={onClose} title={recipe.title} size="xl">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="space-y-6">
+          <OptimizedImage
+            src={recipe.image}
+            alt={recipe.title}
+            className="w-full h-64 rounded-xl object-cover shadow-lg"
+          />
+          
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4 text-sm">
+                <div className="flex items-center gap-1">
+                  <Clock className="w-5 h-5 text-gray-500" />
+                  <span>{recipe.prepTime}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Users className="w-5 h-5 text-gray-500" />
+                  <span>{recipe.servings} servings</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                  <span className="font-semibold">{recipe.rating || '4.5'}</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSaved(!saved)}
+                  className="flex-shrink-0"
+                >
+                  <Bookmark className={saved ? "w-4 h-4 fill-blue-600 text-blue-600" : "w-4 h-4"} />
+                </Button>
+                <Button variant="outline" size="sm" className="flex-shrink-0">
+                  <Share2 className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
           </div>
-          <button
-            onClick={onClose}
-            className="ml-4 flex-shrink-0 p-2 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-700 transition-colors"
-            aria-label="Close"
-          >
-            <X className="w-5 h-5" />
-          </button>
         </div>
 
-        {/* Body */}
-        <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Left */}
-          <div className="space-y-5">
-            <img
-              src={recipe.image}
-              alt={recipe.title}
-              loading="lazy"
-              className="w-full h-56 object-cover rounded-xl shadow"
-            />
-            <div className="flex items-center gap-4 text-sm text-gray-600 flex-wrap">
-              <span className="flex items-center gap-1">
-                <Clock className="w-4 h-4" /> {recipe.prepTime}
-              </span>
-              <span className="flex items-center gap-1">
-                <Users className="w-4 h-4" /> {recipe.servings} servings
-              </span>
-              <span className="flex items-center gap-1">
-                <Star className="w-4 h-4 fill-amber-400 text-amber-400" /> {recipe.rating || '4.5'}
-              </span>
-            </div>
-            <div className="bg-gray-50 rounded-xl p-4 space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-500">Difficulty</span>
-                <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${difficultyColor}`}>
-                  {recipe.difficulty}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-500">Chef</span>
-                <span className="font-medium text-gray-700">{recipe.chef}</span>
-              </div>
-            </div>
-            {recipe.tags?.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {recipe.tags.slice(0, 4).map((tag) => (
-                  <span key={tag} className="px-2 py-1 bg-orange-50 text-orange-700 rounded-lg text-xs font-medium">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-            <button
-              onClick={() => setSaved(!saved)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-medium transition-colors ${
-                saved ? 'border-blue-500 bg-blue-50 text-blue-600' : 'border-gray-300 text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              <Bookmark className={saved ? 'w-4 h-4 fill-blue-500' : 'w-4 h-4'} />
-              {saved ? 'Saved' : 'Save Recipe'}
-            </button>
-          </div>
-
-          {/* Right */}
-          <div>
-            <div className="flex gap-1 bg-gray-100 rounded-lg p-1 mb-5">
-              {[
-                { id: 'ingredients', label: 'Ingredients', icon: Utensils },
-                { id: 'instructions', label: 'Instructions', icon: BookOpen },
-                { id: 'nutrition', label: 'Nutrition', icon: Heart },
-              ].map(({ id, label, icon: Icon }) => (
+        <div>
+          <div className="flex space-x-1 mb-6 bg-gray-100 rounded-lg p-1 overflow-x-auto">
+            {tabs.map(tab => {
+              const Icon = tab.icon;
+              return (
                 <button
-                  key={id}
-                  onClick={() => setActiveTab(id)}
-                  className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-md text-xs font-medium transition-all ${
-                    activeTab === id ? 'bg-white text-orange-600 shadow-sm' : 'text-gray-500 hover:text-gray-800'
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex-1 min-w-0 flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm font-medium transition-all whitespace-nowrap ${
+                    activeTab === tab.id ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'
                   }`}
                 >
-                  <Icon className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">{label}</span>
+                  <Icon className="w-4 h-4" />
+                  <span className="hidden sm:inline">{tab.label}</span>
                 </button>
-              ))}
-            </div>
+              );
+            })}
+          </div>
 
-            <div className="max-h-80 overflow-y-auto pr-1">
-              {activeTab === 'ingredients' && (
-                <div className="space-y-2">
-                  {recipe.ingredients?.map((item, i) => (
-                    <label key={i} className="flex items-start gap-3 cursor-pointer group">
-                      <input type="checkbox" className="mt-0.5 rounded flex-shrink-0 accent-orange-500" />
-                      <span className="text-sm text-gray-700 group-hover:text-gray-900">{item}</span>
-                    </label>
+          <div className="space-y-4">
+            {activeTab === 'ingredients' && (
+              <div>
+                <h4 className="font-semibold text-lg mb-4">Ingredients</h4>
+                <ul className="space-y-2 max-h-80 overflow-y-auto">
+                  {recipe.ingredients && recipe.ingredients.map((ingredient, index) => (
+                    <li key={index} className="flex items-start gap-3">
+                      <input type="checkbox" className="mt-1 rounded flex-shrink-0" />
+                      <span className="text-sm leading-relaxed">{ingredient}</span>
+                    </li>
                   ))}
-                </div>
-              )}
-              {activeTab === 'instructions' && (
-                <ol className="space-y-4">
-                  {recipe.instructions?.map((step, i) => (
-                    <li key={i} className="flex gap-3">
-                      <span className="flex-shrink-0 w-7 h-7 rounded-full bg-orange-100 text-orange-600 text-xs font-bold flex items-center justify-center">
-                        {i + 1}
-                      </span>
-                      <p className="text-sm text-gray-700 leading-relaxed pt-0.5">{step}</p>
+                </ul>
+              </div>
+            )}
+
+            {activeTab === 'instructions' && (
+              <div>
+                <h4 className="font-semibold text-lg mb-4">Instructions</h4>
+                <ol className="space-y-4 max-h-80 overflow-y-auto">
+                  {recipe.instructions && recipe.instructions.map((instruction, index) => (
+                    <li key={index} className="flex gap-4">
+                      <div className="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-semibold">
+                        {index + 1}
+                      </div>
+                      <p className="text-sm leading-relaxed">{instruction}</p>
                     </li>
                   ))}
                 </ol>
-              )}
-              {activeTab === 'nutrition' && (
-                <div className="grid grid-cols-2 gap-3">
-                  {recipe.nutrition ? Object.entries(recipe.nutrition).map(([key, val]) => (
-                    <div key={key} className="bg-gray-50 rounded-lg p-3 flex justify-between items-center">
-                      <span className="text-xs text-gray-500 capitalize">{key}</span>
-                      <span className="text-sm font-semibold text-gray-800">{val}</span>
-                    </div>
-                  )) : (
-                    <p className="col-span-2 text-sm text-gray-400 text-center">Not available</p>
-                  )}
+              </div>
+            )}
+
+            {activeTab === 'nutrition' && (
+              <div>
+                <h4 className="font-semibold text-lg mb-4">Nutrition Facts (Per Serving)</h4>
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    {recipe.nutrition ? Object.entries(recipe.nutrition).map(([key, value]) => (
+                      <div key={key} className="flex justify-between">
+                        <span className="capitalize">{key}</span>
+                        <span className="font-semibold">{value}</span>
+                      </div>
+                    )) : (
+                      <div className="col-span-2 text-gray-500 text-center">Nutrition information not available</div>
+                    )}
+                  </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 
