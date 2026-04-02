@@ -1,96 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Clock, Users, Star, Bookmark, Share2, 
-  Utensils, BookOpen, Heart, Eye, X
-} from 'lucide-react';
+import { Clock, Users, Star, Bookmark, Share2, Utensils, BookOpen, Heart, Eye, X } from 'lucide-react';
 import { getRecipeDetails } from './recipeData';
-
-// UI Components (extracted from main app)
-const Button = ({ children, variant = 'primary', size = 'md', className = '', onClick, ...props }) => {
-  const baseClasses = 'inline-flex items-center justify-center font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2';
-  
-  const variants = {
-    primary: 'bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg hover:shadow-xl',
-    secondary: 'bg-white text-gray-900 border border-gray-300 hover:bg-gray-50 shadow-sm',
-    ghost: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100',
-    outline: 'border border-orange-500 text-orange-600 hover:bg-orange-50',
-    cta: 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-2xl'
-  };
-  
-  const sizes = {
-    sm: 'px-3 py-1.5 text-sm rounded-md',
-    md: 'px-4 py-2 text-sm rounded-lg',
-    lg: 'px-6 py-3 text-base rounded-lg',
-    xl: 'px-8 py-4 text-lg rounded-xl',
-    icon: 'p-2 rounded-lg'
-  };
-  
-  return (
-    <button
-      className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`}
-      onClick={onClick}
-      {...props}
-    >
-      {children}
-    </button>
-  );
-};
-
-const OptimizedImage = ({ src, alt, className }) => (
-  <img src={src} alt={alt} className={className} loading="lazy" />
-);
-
-const Modal = ({ isOpen, onClose, title, children, size = 'lg' }) => {
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleEscKey = (e) => { if (e.key === 'Escape') onClose(); };
-    document.addEventListener('keydown', handleEscKey);
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.removeEventListener('keydown', handleEscKey);
-      document.body.style.overflow = '';
-    };
-  }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
-
-  const sizeClasses = {
-    sm: 'max-w-md',
-    md: 'max-w-lg',
-    lg: 'max-w-2xl',
-    xl: 'max-w-4xl'
-  };
-
-  // Single container: backdrop colour lives here, onClick=onClose fires on any
-  // click on the gray area. The modal box inside stops propagation so clicks
-  // inside the white card never bubble up to this handler.
-  return (
-    <div
-      className="fixed inset-0 z-50 bg-gray-500/75 flex items-center justify-center p-4"
-      onClick={onClose}
-    >
-      <div
-        className={`relative w-full ${sizeClasses[size]} max-h-[90vh] overflow-y-auto bg-white shadow-2xl rounded-2xl`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
-          <h3 className="text-2xl font-bold text-gray-900">{title}</h3>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 hover:scale-110 transition-transform flex-shrink-0"
-            type="button"
-            aria-label="Close modal"
-          >
-            <X className="w-6 h-6" />
-          </button>
-        </div>
-        <div className="p-6">
-          {children}
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const RecipeModal = ({ selectedRecipeId, isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState('ingredients');
@@ -98,359 +8,249 @@ const RecipeModal = ({ selectedRecipeId, isOpen, onClose }) => {
 
   const recipe = selectedRecipeId ? getRecipeDetails(selectedRecipeId) : null;
 
-  // Reset tab/saved state whenever a new recipe is opened
+  // Lock body scroll while open
   useEffect(() => {
-    if (selectedRecipeId && isOpen) {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [isOpen]);
+
+  // Close on Escape key
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [isOpen, onClose]);
+
+  // Reset tabs when a new recipe opens
+  useEffect(() => {
+    if (isOpen) {
       setActiveTab('ingredients');
       setSaved(false);
     }
   }, [selectedRecipeId, isOpen]);
 
-  // Always render Modal so it controls its own mount/unmount via isOpen.
-  // Render a closed (null) modal when there is no recipe — never short-circuit
-  // before Modal gets a chance to clean up its own effects.
-  if (!isOpen) return null;
-  if (!recipe) return null;
+  // Not open or no recipe — render nothing
+  if (!isOpen || !recipe) return null;
 
-  const tabs = [
-    { id: 'ingredients', label: 'Ingredients', icon: Utensils },
-    { id: 'instructions', label: 'Instructions', icon: BookOpen },
-    { id: 'nutrition', label: 'Nutrition', icon: Heart },
-    { id: 'reviews', label: 'Reviews', icon: Star }
-  ];
+  const difficultyColor =
+    recipe.difficulty === 'Easy' ? 'bg-green-100 text-green-800' :
+    recipe.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+    'bg-red-100 text-red-800';
 
-  const renderHeatLevel = (level) => {
-    return (
-      <div className="flex items-center gap-1">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <div
-            key={i}
-            className={`w-2 h-4 rounded-full ${
-              i < level ? 'bg-red-500' : 'bg-gray-200'
-            }`}
-          />
-        ))}
-        <span className="text-xs text-gray-600 ml-1">
-          {level === 0 ? 'None' : level === 1 ? 'Mild' : level === 2 ? 'Medium' : level === 3 ? 'Hot' : level === 4 ? 'Very Hot' : 'Extreme'}
-        </span>
-      </div>
-    );
-  };
-
-  const handleTabChange = (tabId) => {
-    setActiveTab(tabId);
-  };
-
-  const handleSaveToggle = () => {
-    setSaved(!saved);
-  };
-
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: recipe.title,
-        text: recipe.description,
-        url: window.location.href
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-    }
-  };
+  const heatLabel = ['None', 'Mild', 'Medium', 'Hot', 'Very Hot', 'Extreme'];
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={recipe.title} size="xl">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="space-y-6">
-          <OptimizedImage
-            src={recipe.image}
-            alt={recipe.title}
-            className="w-full h-64 rounded-xl object-cover shadow-lg"
-          />
-          
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4 text-sm">
-                <div className="flex items-center gap-1">
-                  <Clock className="w-5 h-5 text-gray-500" />
-                  <span>{recipe.prepTime}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Users className="w-5 h-5 text-gray-500" />
-                  <span>{recipe.servings} servings</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                  <span className="font-semibold">{recipe.rating}</span>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleSaveToggle}
-                  className="flex-shrink-0"
-                >
-                  <Bookmark className={saved ? "w-4 h-4 fill-blue-600 text-blue-600" : "w-4 h-4"} />
-                </Button>
-                <Button variant="outline" size="sm" className="flex-shrink-0" onClick={handleShare}>
-                  <Share2 className="w-4 h-4" />
-                </Button>
-              </div>
+    // Backdrop — clicking the gray area closes the modal
+    <div
+      className="fixed inset-0 z-50 bg-black/60 flex items-start justify-center overflow-y-auto p-4"
+      onClick={onClose}
+    >
+      {/* Modal box — clicks inside do NOT close the modal */}
+      <div
+        className="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl my-8"
+        onClick={(e) => e.stopPropagation()}
+      >
+
+        {/* ── Header ── */}
+        <div className="flex items-start justify-between p-6 border-b border-gray-100">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">{recipe.title}</h2>
+            <p className="text-sm text-gray-500 mt-1">{recipe.description}</p>
+          </div>
+          <button
+            onClick={onClose}
+            className="ml-4 flex-shrink-0 p-2 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-700 transition-colors"
+            aria-label="Close"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* ── Body ── */}
+        <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+          {/* Left column */}
+          <div className="space-y-5">
+            {/* Image */}
+            <img
+              src={recipe.image}
+              alt={recipe.title}
+              loading="lazy"
+              className="w-full h-56 object-cover rounded-xl shadow"
+            />
+
+            {/* Quick stats */}
+            <div className="flex items-center gap-4 text-sm text-gray-600 flex-wrap">
+              <span className="flex items-center gap-1">
+                <Clock className="w-4 h-4" /> {recipe.prepTime}
+              </span>
+              <span className="flex items-center gap-1">
+                <Users className="w-4 h-4" /> {recipe.servings} servings
+              </span>
+              <span className="flex items-center gap-1">
+                <Star className="w-4 h-4 fill-amber-400 text-amber-400" /> {recipe.rating}
+              </span>
+              <span className="text-gray-500">{recipe.calories} cal</span>
             </div>
 
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Heat Level:</span>
-                {renderHeatLevel(recipe.heatLevel || 0)}
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Difficulty:</span>
-                <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                  recipe.difficulty === 'Easy' ? 'bg-green-100 text-green-800' :
-                  recipe.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
-                  'bg-red-100 text-red-800'
-                }`}>
+            {/* Meta grid */}
+            <div className="bg-gray-50 rounded-xl p-4 space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-500">Difficulty</span>
+                <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${difficultyColor}`}>
                   {recipe.difficulty}
                 </span>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Chef:</span>
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-white text-xs font-semibold">
-                      {recipe.chef && recipe.chef.split(' ').map(n => n[0]).join('')}
-                    </span>
-                  </div>
-                  <span className="text-sm font-medium">{recipe.chef}</span>
-                </div>
+              <div className="flex justify-between">
+                <span className="text-gray-500">Heat</span>
+                <span className="font-medium text-gray-700">{heatLabel[recipe.heatLevel || 0]}</span>
               </div>
-              {recipe.tags && recipe.tags.length > 0 && (
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Tags:</span>
-                  <div className="flex flex-wrap gap-1 justify-end">
-                    {recipe.tags.slice(0, 3).map((tag, index) => (
-                      <span
-                        key={index}
-                        className="px-2 py-1 bg-amber-50 text-amber-700 rounded-lg text-xs font-medium"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                    {recipe.tags.length > 3 && (
-                      <span className="px-2 py-1 bg-amber-50 text-amber-700 rounded-lg text-xs font-medium">
-                        +{recipe.tags.length - 3}
-                      </span>
-                    )}
-                  </div>
+              <div className="flex justify-between">
+                <span className="text-gray-500">Chef</span>
+                <span className="font-medium text-gray-700">{recipe.chef}</span>
+              </div>
+            </div>
+
+            {/* Tags */}
+            {recipe.tags?.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {recipe.tags.slice(0, 4).map((tag) => (
+                  <span key={tag} className="px-2 py-1 bg-amber-50 text-amber-700 rounded-lg text-xs font-medium">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Action buttons */}
+            <div className="flex gap-2">
+              <button
+                onClick={() => setSaved(!saved)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-medium transition-colors ${
+                  saved ? 'border-blue-500 bg-blue-50 text-blue-600' : 'border-gray-300 text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                <Bookmark className={saved ? 'w-4 h-4 fill-blue-500' : 'w-4 h-4'} />
+                {saved ? 'Saved' : 'Save'}
+              </button>
+              <button
+                onClick={() => {
+                  if (navigator.share) {
+                    navigator.share({ title: recipe.title, url: window.location.href });
+                  } else {
+                    navigator.clipboard?.writeText(window.location.href);
+                  }
+                }}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 text-sm font-medium transition-colors"
+              >
+                <Share2 className="w-4 h-4" /> Share
+              </button>
+            </div>
+          </div>
+
+          {/* Right column */}
+          <div>
+            {/* Tabs */}
+            <div className="flex gap-1 bg-gray-100 rounded-lg p-1 mb-5">
+              {[
+                { id: 'ingredients', label: 'Ingredients', icon: Utensils },
+                { id: 'instructions', label: 'Instructions', icon: BookOpen },
+                { id: 'nutrition', label: 'Nutrition', icon: Heart },
+                { id: 'reviews', label: 'Reviews', icon: Star },
+              ].map(({ id, label, icon: Icon }) => (
+                <button
+                  key={id}
+                  onClick={() => setActiveTab(id)}
+                  className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-md text-xs font-medium transition-all ${
+                    activeTab === id ? 'bg-white text-orange-600 shadow-sm' : 'text-gray-500 hover:text-gray-800'
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">{label}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Tab content */}
+            <div className="max-h-80 overflow-y-auto pr-1">
+
+              {activeTab === 'ingredients' && (
+                <div className="space-y-2">
+                  <p className="text-xs text-gray-400 mb-3">
+                    {recipe.servings} servings · {recipe.prepTime} · {recipe.calories} cal/serving
+                  </p>
+                  {recipe.ingredients?.map((item, i) => (
+                    <label key={i} className="flex items-start gap-3 cursor-pointer group">
+                      <input type="checkbox" className="mt-0.5 rounded flex-shrink-0 accent-orange-500" />
+                      <span className="text-sm text-gray-700 group-hover:text-gray-900">{item}</span>
+                    </label>
+                  ))}
                 </div>
               )}
+
+              {activeTab === 'instructions' && (
+                <ol className="space-y-4">
+                  {recipe.instructions?.map((step, i) => (
+                    <li key={i} className="flex gap-3">
+                      <span className="flex-shrink-0 w-7 h-7 rounded-full bg-orange-100 text-orange-600 text-xs font-bold flex items-center justify-center">
+                        {i + 1}
+                      </span>
+                      <p className="text-sm text-gray-700 leading-relaxed pt-0.5">{step}</p>
+                    </li>
+                  ))}
+                </ol>
+              )}
+
+              {activeTab === 'nutrition' && (
+                <div className="grid grid-cols-2 gap-3">
+                  {Object.entries(recipe.nutrition || {}).map(([key, val]) => (
+                    <div key={key} className="bg-gray-50 rounded-lg p-3 flex justify-between items-center">
+                      <span className="text-xs text-gray-500 capitalize">{key}</span>
+                      <span className="text-sm font-semibold text-gray-800">{val}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {activeTab === 'reviews' && (
+                <div className="space-y-4">
+                  <p className="text-xs text-gray-400">{recipe.reviews} reviews</p>
+                  {[
+                    { name: 'John D.', initials: 'JD', color: 'bg-blue-100 text-blue-600', stars: 5, text: 'Amazing recipe! The flavors were perfectly balanced and my family loved it.' },
+                    { name: 'Anita S.', initials: 'AS', color: 'bg-green-100 text-green-600', stars: 5, text: 'Perfect for festivals! Made this for Diwali and everyone asked for the recipe.' },
+                    { name: 'Maria K.', initials: 'MK', color: 'bg-purple-100 text-purple-600', stars: 4, text: 'Good recipe, took a bit longer than expected but the taste was authentic.' },
+                  ].map((review, i) => (
+                    <div key={i} className="border border-gray-100 rounded-xl p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${review.color}`}>
+                            {review.initials}
+                          </div>
+                          <span className="text-sm font-medium text-gray-800">{review.name}</span>
+                        </div>
+                        <div className="flex gap-0.5">
+                          {[1,2,3,4,5].map(s => (
+                            <Star key={s} className={`w-3.5 h-3.5 ${s <= review.stars ? 'fill-amber-400 text-amber-400' : 'text-gray-200'}`} />
+                          ))}
+                        </div>
+                      </div>
+                      <p className="text-sm text-gray-600">{review.text}</p>
+                    </div>
+                  ))}
+                  <button className="w-full py-2 border border-gray-200 rounded-lg text-sm text-gray-500 hover:bg-gray-50 flex items-center justify-center gap-2 transition-colors">
+                    <Eye className="w-4 h-4" /> Load more reviews
+                  </button>
+                </div>
+              )}
+
             </div>
           </div>
         </div>
-
-        <div>
-          <div className="flex space-x-1 mb-6 bg-gray-100 rounded-lg p-1 overflow-x-auto">
-            {tabs.map(tab => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => handleTabChange(tab.id)}
-                  className={`flex-1 min-w-0 flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm font-medium transition-all whitespace-nowrap ${
-                    activeTab === tab.id ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span className="hidden sm:inline">{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="space-y-4">
-            {activeTab === 'ingredients' && (
-              <div>
-                <h4 className="font-semibold text-lg mb-4">Ingredients</h4>
-                <div className="mb-4 flex items-center gap-4 text-sm text-gray-600">
-                  <span>Servings: {recipe.servings}</span>
-                  <span>•</span>
-                  <span>Prep: {recipe.prepTime}</span>
-                  <span>•</span>
-                  <span>{recipe.calories} cal per serving</span>
-                </div>
-                <ul className="space-y-2 max-h-80 overflow-y-auto">
-                  {recipe.ingredients && recipe.ingredients.length > 0 ? (
-                    recipe.ingredients.map((ingredient, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <input type="checkbox" className="mt-1 rounded flex-shrink-0" />
-                        <span className="text-sm leading-relaxed">{ingredient}</span>
-                      </li>
-                    ))
-                  ) : (
-                    <li className="text-sm text-gray-500 italic">No ingredients available</li>
-                  )}
-                </ul>
-              </div>
-            )}
-
-            {activeTab === 'instructions' && (
-              <div>
-                <h4 className="font-semibold text-lg mb-4">Instructions</h4>
-                <ol className="space-y-4 max-h-80 overflow-y-auto">
-                  {recipe.instructions && recipe.instructions.length > 0 ? (
-                    recipe.instructions.map((instruction, index) => (
-                      <li key={index} className="flex gap-4">
-                        <div className="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-semibold">
-                          {index + 1}
-                        </div>
-                        <p className="text-sm leading-relaxed">{instruction}</p>
-                      </li>
-                    ))
-                  ) : (
-                    <li className="text-sm text-gray-500 italic">No instructions available</li>
-                  )}
-                </ol>
-              </div>
-            )}
-
-            {activeTab === 'nutrition' && (
-              <div>
-                <h4 className="font-semibold text-lg mb-4">Nutrition Facts (Per Serving)</h4>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div className="flex justify-between">
-                      <span>Calories</span>
-                      <span className="font-semibold">{recipe.nutrition?.calories || recipe.calories || 'N/A'}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Protein</span>
-                      <span className="font-semibold">{recipe.nutrition?.protein || 'N/A'}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Carbs</span>
-                      <span className="font-semibold">{recipe.nutrition?.carbs || 'N/A'}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Fat</span>
-                      <span className="font-semibold">{recipe.nutrition?.fat || 'N/A'}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Fiber</span>
-                      <span className="font-semibold">{recipe.nutrition?.fiber || 'N/A'}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Sugar</span>
-                      <span className="font-semibold">{recipe.nutrition?.sugar || 'N/A'}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'reviews' && (
-              <div>
-                <h4 className="font-semibold text-lg mb-4">Reviews ({recipe.reviews || 0})</h4>
-                
-                <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                  <p className="text-sm text-blue-800 mb-3">Share your experience with this recipe!</p>
-                  <Button variant="primary" size="sm" className="w-full sm:w-auto">
-                    <Star className="w-4 h-4 mr-2" />
-                    Write a Review
-                  </Button>
-                </div>
-                
-                <div className="space-y-4 max-h-80 overflow-y-auto">
-                  <div className="border border-gray-200 rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                          <span className="text-sm font-semibold text-blue-600">JD</span>
-                        </div>
-                        <span className="font-medium">John Doe</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        {[1, 2, 3, 4, 5].map(star => (
-                          <Star key={star} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        ))}
-                      </div>
-                    </div>
-                    <p className="text-sm text-gray-600 leading-relaxed">
-                      Amazing recipe! The flavors were perfectly balanced and my family loved it. Will definitely make this again.
-                    </p>
-                  </div>
-                  
-                  <div className="border border-gray-200 rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                          <span className="text-sm font-semibold text-green-600">AS</span>
-                        </div>
-                        <span className="font-medium">Anita Sharma</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        {[1, 2, 3, 4, 5].map(star => (
-                          <Star key={star} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        ))}
-                      </div>
-                    </div>
-                    <p className="text-sm text-gray-600 leading-relaxed">
-                      Perfect for festivals! Made this for Diwali and everyone couldn't stop asking for the recipe.
-                    </p>
-                  </div>
-                  
-                  <div className="border border-gray-200 rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                          <span className="text-sm font-semibold text-purple-600">MK</span>
-                        </div>
-                        <span className="font-medium">Maria Krishnan</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        {[1, 2, 3, 4].map(star => (
-                          <Star key={star} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        ))}
-                        <Star className="w-4 h-4 text-gray-300" />
-                      </div>
-                    </div>
-                    <p className="text-sm text-gray-600 leading-relaxed">
-                      Good recipe but took a bit longer than expected. The taste was authentic though. Great for special occasions.
-                    </p>
-                  </div>
-                  
-                  <div className="border border-gray-200 rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
-                          <span className="text-sm font-semibold text-orange-600">RP</span>
-                        </div>
-                        <span className="font-medium">Rajesh Patel</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        {[1, 2, 3, 4, 5].map(star => (
-                          <Star key={star} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        ))}
-                      </div>
-                    </div>
-                    <p className="text-sm text-gray-600 leading-relaxed">
-                      Excellent step-by-step instructions! Even as a beginner cook, I was able to make this successfully. Highly recommended!
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="mt-6 text-center">
-                  <Button variant="outline" size="sm">
-                    <Eye className="w-4 h-4 mr-2" />
-                    Load More Reviews
-                  </Button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
       </div>
-    </Modal>
+    </div>
   );
 };
 
