@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/Culinary/static/css/main.96ff56b3.css",
+    "main.js": "/Culinary/static/js/main.2c4b2c1d.js",
+    "static/js/788.b495831d.chunk.js": "/Culinary/static/js/788.b495831d.chunk.js",
+    "index.html": "/Culinary/index.html",
+    "main.96ff56b3.css.map": "/Culinary/static/css/main.96ff56b3.css.map",
+    "main.2c4b2c1d.js.map": "/Culinary/static/js/main.2c4b2c1d.js.map",
+    "788.b495831d.chunk.js.map": "/Culinary/static/js/788.b495831d.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.96ff56b3.css",
+    "static/js/main.2c4b2c1d.js"
+  ]
+}
