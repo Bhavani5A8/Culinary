@@ -40,23 +40,15 @@ const OptimizedImage = ({ src, alt, className }) => (
   <img src={src} alt={alt} className={className} loading="lazy" />
 );
 
-// Fixed Modal Component with proper event handling
 const Modal = ({ isOpen, onClose, title, children, size = 'lg' }) => {
   useEffect(() => {
-    const handleEscKey = (event) => {
-      if (event.key === 'Escape') {
-        onClose();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscKey);
-      document.body.style.overflow = 'hidden';
-    }
-
+    if (!isOpen) return;
+    const handleEscKey = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', handleEscKey);
+    document.body.style.overflow = 'hidden';
     return () => {
       document.removeEventListener('keydown', handleEscKey);
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
     };
   }, [isOpen, onClose]);
 
@@ -69,43 +61,34 @@ const Modal = ({ isOpen, onClose, title, children, size = 'lg' }) => {
     xl: 'max-w-4xl'
   };
 
+  // Single container: backdrop colour lives here, onClick=onClose fires on any
+  // click on the gray area. The modal box inside stops propagation so clicks
+  // inside the white card never bubble up to this handler.
   return (
-    <>
-      {/* Layer 1: Backdrop — the only element that handles outside clicks.
-          Sits at z-50. Clicking anywhere on it calls onClose directly. */}
+    <div
+      className="fixed inset-0 z-50 bg-gray-500/75 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
       <div
-        className="fixed inset-0 z-50 bg-gray-500/75"
-        onClick={onClose}
-        aria-hidden="true"
-      />
-
-      {/* Layer 2: Centering shell — same z-50 but pointer-events-none so all
-          clicks pass through to the backdrop above, EXCEPT on the modal box
-          itself which re-enables pointer events and stops propagation. */}
-      <div className="fixed inset-0 z-50 overflow-y-auto pointer-events-none">
-        <div className="flex min-h-full items-center justify-center p-4 sm:p-0">
-          <div
-            className={`pointer-events-auto w-full ${sizeClasses[size]} my-8 overflow-hidden text-left bg-white shadow-2xl rounded-2xl`}
-            onClick={(e) => e.stopPropagation()}
+        className={`relative w-full ${sizeClasses[size]} max-h-[90vh] overflow-y-auto bg-white shadow-2xl rounded-2xl`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
+          <h3 className="text-2xl font-bold text-gray-900">{title}</h3>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 hover:scale-110 transition-transform flex-shrink-0"
+            type="button"
+            aria-label="Close modal"
           >
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <h3 className="text-2xl font-bold text-gray-900">{title}</h3>
-              <button
-                onClick={onClose}
-                className="text-gray-400 hover:text-gray-600 hover:scale-110 transition-transform"
-                type="button"
-                aria-label="Close modal"
-              >
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-            <div className="p-6">
-              {children}
-            </div>
-          </div>
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+        <div className="p-6">
+          {children}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -114,8 +97,8 @@ const RecipeModal = ({ selectedRecipeId, isOpen, onClose }) => {
   const [saved, setSaved] = useState(false);
 
   const recipe = selectedRecipeId ? getRecipeDetails(selectedRecipeId) : null;
-  
-  // Reset state when modal opens with new recipe
+
+  // Reset tab/saved state whenever a new recipe is opened
   useEffect(() => {
     if (selectedRecipeId && isOpen) {
       setActiveTab('ingredients');
@@ -123,6 +106,10 @@ const RecipeModal = ({ selectedRecipeId, isOpen, onClose }) => {
     }
   }, [selectedRecipeId, isOpen]);
 
+  // Always render Modal so it controls its own mount/unmount via isOpen.
+  // Render a closed (null) modal when there is no recipe — never short-circuit
+  // before Modal gets a chance to clean up its own effects.
+  if (!isOpen) return null;
   if (!recipe) return null;
 
   const tabs = [
