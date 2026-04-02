@@ -1,70 +1,73 @@
-# Getting Started with Create React App
+# CulinaryFest — Indian Recipe Discovery App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A recipe discovery web app featuring authentic Indian cuisine from across all states, festive recipes, and a hands-free kitchen mode.
 
-## Available Scripts
+## Live Demo
 
-In the project directory, you can run:
+**https://Bhavani5A8.github.io/Culinary**
 
-### `npm start`
+> Deployed on GitHub Pages. Navigate to `/indian-cuisine` via the Cuisines menu to explore regional Indian recipes.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Features
 
-### `npm test`
+- **16 real recipes** — South Indian breakfasts, mains, desserts, drinks, and starters with full ingredients, instructions, and nutrition data
+- **Indian Cuisine Explorer** — 9 regional states with authentic recipes (lazy-loaded for fast initial load)
+- **Smart search** — real-time search across title, description, tags, and chef name with voice input support
+- **Dark mode** — persists across page refreshes via `localStorage`
+- **Kitchen Mode** — hands-free step-by-step cooking with voice commands and text-to-speech
+- **Personalization** — dietary preferences, skill level, and favourite cuisines
+- **URL-based routing** — browser back button works, pages are deep-linkable:
+  - `/` — Home (South Indian breakfasts + featured recipes)
+  - `/#/indian-cuisine` — Indian Cuisine Explorer
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## Tech Stack
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| Layer | Technology |
+|-------|-----------|
+| UI Framework | React 19.1.1 |
+| Routing | React Router DOM 7 (HashRouter) |
+| Styling | Tailwind CSS 3.4 |
+| Icons | Lucide React |
+| Build | Create React App 5 |
+| Deployment | GitHub Pages (`gh-pages`) |
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Local Development
 
-### `npm run eject`
+```bash
+git clone https://github.com/Bhavani5A8/Culinary.git
+cd Culinary
+npm install
+npm start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Deploy
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+npm run deploy
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+This builds the app and publishes to the `gh-pages` branch automatically.
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Bug Fixes Applied (v1.1)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+| # | Fix |
+|---|-----|
+| 1 | Removed broken `handleRecipeClick` in `recipeData.js` (4 undefined variable refs) |
+| 2 | Removed debug "Toggle Enhancements" panel from production UI |
+| 3 | Dark mode now persists via `localStorage` (survives page refresh) |
+| 4 | Newsletter shows once per browser session (`sessionStorage` guard) |
+| 5 | `RecipeCard` is keyboard-accessible (`role=button`, `tabIndex`, `onKeyDown`) |
+| 6 | Web Speech API guarded for Firefox/Safari compatibility |
+| 7 | Added React Router — browser back button, deep links, code-split lazy loading |
+| 8 | Expanded recipe data from 7 → 16 real recipes with full content |
+| 9 | All `console.log/warn/error` removed from production code |

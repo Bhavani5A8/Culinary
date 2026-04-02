@@ -82,7 +82,6 @@ const CulinaryFest = () => {
   };
 
   const handleNavigateToIndian = () => navigate('/indian-cuisine');
-  const handleNavigateHome = () => navigate('/');
 
   const handleSearch = (query) => {
     setSearchFilters(prev => ({ ...prev, query }));
