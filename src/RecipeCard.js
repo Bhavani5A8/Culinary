@@ -9,105 +9,56 @@ const RecipeCard = ({ recipe, onClick, enhanced = false, variant = 'default' }) 
   const [loved, setLoved] = useState(false);
 
   const handleLoveClick = (e) => {
-    try {
-      e.stopPropagation(); // Prevent card click
-      e.preventDefault();
-      setLoved(!loved);
-    } catch (error) {
-      console.error('Error handling love click:', error);
-    }
+    e.stopPropagation();
+    e.preventDefault();
+    setLoved(!loved);
   };
 
-  // FIXED: Simplified card click handler
   const handleCardClick = (e) => {
-    try {
-      // Don't trigger if clicking on interactive elements
-      if (e.target.closest('button')) {
-        return;
-      }
-      
-      if (onClick && recipe.id) {
-        console.log('🎯 RecipeCard - Card clicked, calling onClick with ID:', recipe.id);
-        onClick(recipe.id);
-      }
-    } catch (error) {
-      console.error('Error handling card click:', error);
+    // Don't trigger card click when interacting with buttons inside the card
+    if (e.target.closest('button')) return;
+    if (onClick && recipe.id) onClick(recipe.id);
+  };
+
+  const handleCardKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (onClick && recipe.id) onClick(recipe.id);
     }
   };
 
-  // FIXED: Handle overlay click
   const handleOverlayClick = (e) => {
-    try {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onClick && recipe.id) onClick(recipe.id);
+  };
+
+  const handleOverlayKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       e.stopPropagation();
-      
-      if (onClick && recipe.id) {
-        console.log('📖 RecipeCard - Overlay clicked, calling onClick with ID:', recipe.id);
-        onClick(recipe.id);
-      }
-    } catch (error) {
-      console.error('Error handling overlay click:', error);
+      if (onClick && recipe.id) onClick(recipe.id);
     }
   };
 
-  // FIXED: Handle keyboard events for overlay
-  const handleOverlayKeyDown = (e) => {
-    try {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        if (onClick && recipe.id) {
-          console.log('⌨️ RecipeCard - Overlay keyboard activated, calling onClick with ID:', recipe.id);
-          onClick(recipe.id);
-        }
-      }
-    } catch (error) {
-      console.error('Error handling overlay keyboard event:', error);
-    }
-  };
+  if (!recipe) return null;
 
-  const handleMouseEnter = () => {
-    try {
-      setIsHovered(true);
-    } catch (error) {
-      console.error('Error handling mouse enter:', error);
-    }
-  };
-
-  const handleMouseLeave = () => {
-    try {
-      setIsHovered(false);
-    } catch (error) {
-      console.error('Error handling mouse leave:', error);
-    }
-  };
-
-  if (!recipe) {
-    console.error('RecipeCard: recipe prop is required');
-    return null;
-  }
-
-  let difficultyClasses = 'px-3 py-1 rounded-full text-xs font-semibold ';
-  try {
-    if (recipe.difficulty === 'Hard') {
-      difficultyClasses += 'bg-red-500 text-white';
-    } else if (recipe.difficulty === 'Medium') {
-      difficultyClasses += 'bg-amber-500 text-white';
-    } else {
-      difficultyClasses += 'bg-green-500 text-white';
-    }
-  } catch (error) {
-    console.error('Error setting difficulty classes:', error);
-    difficultyClasses += 'bg-gray-500 text-white';
-  }
+  const difficultyColor =
+    recipe.difficulty === 'Hard' ? 'bg-red-500 text-white' :
+    recipe.difficulty === 'Medium' ? 'bg-amber-500 text-white' :
+    'bg-green-500 text-white';
+  const difficultyClasses = `px-3 py-1 rounded-full text-xs font-semibold ${difficultyColor}`;
 
   return (
     <div
       className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden group transform hover:-translate-y-2 cursor-pointer"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      role="button"
+      tabIndex={0}
+      aria-label={`View recipe: ${recipe.title}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       onClick={handleCardClick}
+      onKeyDown={handleCardKeyDown}
     >
       <div className="relative h-64 overflow-hidden">
         <OptimizedImage

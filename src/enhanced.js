@@ -25,7 +25,7 @@ export class ErrorBoundaryWrapper extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error("Caught an error:", error, errorInfo);
+
   }
 
   render() {
@@ -60,7 +60,7 @@ export const EnhancedRecipeCard = ({ recipe, onClick, onView, isPremium, kitchen
   // Validate recipe data on component mount
   useEffect(() => {
     if (!validateRecipe(recipe)) {
-      console.warn('Invalid recipe data passed to EnhancedRecipeCard:', recipe);
+
     }
     if (enhancedFeatures.personalization && recipe?.personalizationScore) {
       setPersonalizedScore(recipe.personalizationScore);
@@ -196,7 +196,7 @@ export const EnhancedRecipeCard = ({ recipe, onClick, onView, isPremium, kitchen
                 onClick={(e) => {
                   e.stopPropagation();
                   // Mock add to meal plan functionality
-                  console.log('Added to meal plan:', recipe.title);
+
                 }}
                 className={`px-4 py-2 rounded-lg transition-colors ${kitchenMode ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
               >
@@ -208,7 +208,7 @@ export const EnhancedRecipeCard = ({ recipe, onClick, onView, isPremium, kitchen
                 onClick={(e) => {
                   e.stopPropagation();
                   // Mock add to shopping list functionality
-                  console.log('Added to shopping list:', recipe.title);
+
                 }}
                 className={`px-4 py-2 rounded-lg transition-colors ${kitchenMode ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
               >
@@ -364,42 +364,44 @@ export const KitchenModeOverlay = ({ recipe, isVisible, onClose, enhancedFeature
   }, []);
 
   const listenForCommands = useCallback(() => {
-    if ('webkitSpeechRecognition' in window) {
-      const recognition = new window.webkitSpeechRecognition();
-      recognition.lang = 'en-US';
-      recognition.interimResults = false;
-      recognition.maxAlternatives = 1;
-
-      recognition.onstart = () => {
-        setIsListening(true);
-        console.log('Listening for commands...');
-      };
-
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript.toLowerCase();
-        console.log('Transcript:', transcript);
-
-        if (transcript.includes('next') || transcript.includes('continue')) {
-          handleNextStep();
-        } else if (transcript.includes('previous') || transcript.includes('go back')) {
-          handlePreviousStep();
-        } else if (transcript.includes('repeat')) {
-          speakStep(steps[currentStepIndex]);
-        }
-      };
-
-      recognition.onerror = (event) => {
-        console.error('Speech recognition error:', event.error);
-        setIsListening(false);
-      };
-
-      recognition.onend = () => {
-        setIsListening(false);
-      };
-
-      recognitionRef.current = recognition;
-      recognition.start();
+    // Guard: Web Speech API is not supported in all browsers (e.g., Firefox, Safari)
+    const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognitionAPI) {
+      // Silently skip — the UI will keep voice control hidden when unsupported
+      return;
     }
+
+    const recognition = new SpeechRecognitionAPI();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      setIsListening(true);
+    };
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript.toLowerCase();
+
+      if (transcript.includes('next') || transcript.includes('continue')) {
+        handleNextStep();
+      } else if (transcript.includes('previous') || transcript.includes('go back')) {
+        handlePreviousStep();
+      } else if (transcript.includes('repeat')) {
+        speakStep(steps[currentStepIndex]);
+      }
+    };
+
+    recognition.onerror = () => {
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognitionRef.current = recognition;
+    recognition.start();
   }, [steps, currentStepIndex]);
 
   useEffect(() => {
@@ -452,7 +454,6 @@ export const KitchenModeOverlay = ({ recipe, isVisible, onClose, enhancedFeature
       if (time <= 0) {
         clearInterval(timerRef.current);
         timerRef.current = null;
-        console.log('Timer finished!');
       }
     }, 1000);
   };
@@ -678,10 +679,10 @@ export const SocialMediaLinks = ({ shareUrl = window.location.href, title = 'Che
       );
 
       // Track share analytics (mock)
-      console.log(`Shared via ${platform.name}:`, { title, url: shareUrl });
+
 
     } catch (error) {
-      console.error('Share failed:', error);
+
     } finally {
       setSharing(false);
     }
@@ -839,9 +840,9 @@ export const NewsletterPreferences = ({ currentPreferences = {}, onUpdate }) => 
       await new Promise(resolve => setTimeout(resolve, 1000));
       onUpdate(preferences);
       setSubscribed(true);
-      console.log('Newsletter preferences updated:', preferences);
+
     } catch (error) {
-      console.error('Failed to save preferences:', error);
+
     } finally {
       setSaving(false);
     }

@@ -38,7 +38,14 @@ const Header = ({ onShowNewsletter, onNavigateToIndian }) => {
 
   // Enhanced UI state layers (additive only)
   const [voiceSearchActive, setVoiceSearchActive] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  // Initialise from localStorage so theme persists across page loads
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    try {
+      return localStorage.getItem('culinary_theme') === 'dark';
+    } catch {
+      return false;
+    }
+  });
   const [searchSuggestions, setSearchSuggestions] = useState([]);
   const [isPersonalizationOpen, setIsPersonalizationOpen] = useState(false);
   const [userPreferences, setUserPreferences] = useState({
@@ -125,7 +132,7 @@ const Header = ({ onShowNewsletter, onNavigateToIndian }) => {
         setIsSearchOpen(false);
       }
     } catch (error) {
-      console.error('Error toggling menu:', error);
+
       // Fallback: Force close state
       setIsMenuOpen(false);
     }
@@ -138,7 +145,7 @@ const Header = ({ onShowNewsletter, onNavigateToIndian }) => {
       // Enhanced: Load search suggestions
       loadSearchSuggestions();
     } catch (error) {
-      console.error('Error opening search:', error);
+
       // Graceful degradation - basic search still works
     }
   };
@@ -148,7 +155,7 @@ const Header = ({ onShowNewsletter, onNavigateToIndian }) => {
       setIsSearchOpen(false);
       setVoiceSearchActive(false); // Enhanced: Clean up voice search
     } catch (error) {
-      console.error('Error closing search:', error);
+
       // Force close for reliability
       setIsSearchOpen(false);
     }
@@ -167,7 +174,7 @@ const Header = ({ onShowNewsletter, onNavigateToIndian }) => {
       ];
       setSearchSuggestions(suggestions);
     } catch (error) {
-      console.error('Error loading search suggestions:', error);
+
       // Fallback to basic suggestions
       setSearchSuggestions(['Popular Recipes', 'Indian Cuisine', 'Quick Meals']);
     }
@@ -177,7 +184,7 @@ const Header = ({ onShowNewsletter, onNavigateToIndian }) => {
   const handleVoiceSearch = async () => {
     try {
       if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        console.warn('Speech recognition not supported');
+
         return;
       }
 
@@ -197,12 +204,12 @@ const Header = ({ onShowNewsletter, onNavigateToIndian }) => {
           // Enhanced: Add to recent searches
           addToRecentSearches(transcript);
         } catch (error) {
-          console.error('Error processing voice result:', error);
+
         }
       };
 
       recognition.onerror = (event) => {
-        console.error('Voice recognition error:', event.error);
+
         setVoiceSearchActive(false);
       };
 
@@ -212,7 +219,7 @@ const Header = ({ onShowNewsletter, onNavigateToIndian }) => {
 
       recognition.start();
     } catch (error) {
-      console.error('Error starting voice search:', error);
+
       setVoiceSearchActive(false);
     }
   };
@@ -223,7 +230,7 @@ const Header = ({ onShowNewsletter, onNavigateToIndian }) => {
       const newRecentSearches = [query, ...recentSearches.filter(s => s !== query)].slice(0, 5);
       setRecentSearches(newRecentSearches);
     } catch (error) {
-      console.error('Error adding to recent searches:', error);
+
     }
   };
 
@@ -240,7 +247,7 @@ const Header = ({ onShowNewsletter, onNavigateToIndian }) => {
         // Update filtered suggestions in real-time
       }
     } catch (error) {
-      console.error('Error updating search query:', error);
+
     }
   };
 
@@ -250,7 +257,7 @@ const Header = ({ onShowNewsletter, onNavigateToIndian }) => {
       setIsPersonalizationOpen(!isPersonalizationOpen);
       setIsMenuOpen(false);
     } catch (error) {
-      console.error('Error toggling personalization:', error);
+
     }
   };
 
@@ -262,18 +269,25 @@ const Header = ({ onShowNewsletter, onNavigateToIndian }) => {
       }));
       // Enhanced: Save to user profile (with error handling)
     } catch (error) {
-      console.error('Error updating user preference:', error);
+
     }
   };
 
   // Enhanced accessibility and theme management
+  // Apply saved theme on first render
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', isDarkMode);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const toggleTheme = () => {
+    const next = !isDarkMode;
+    setIsDarkMode(next);
+    document.documentElement.classList.toggle('dark', next);
     try {
-      setIsDarkMode(!isDarkMode);
-      // Enhanced: Save theme preference
-      document.documentElement.classList.toggle('dark', !isDarkMode);
-    } catch (error) {
-      console.error('Error toggling theme:', error);
+      localStorage.setItem('culinary_theme', next ? 'dark' : 'light');
+    } catch {
+      // localStorage not available (private browsing, etc.) — silently ignore
     }
   };
 
@@ -282,7 +296,7 @@ const Header = ({ onShowNewsletter, onNavigateToIndian }) => {
     try {
       setIsMenuOpen(false);
     } catch (error) {
-      console.error('Error closing menu:', error);
+
     }
   };
 
@@ -292,7 +306,7 @@ const Header = ({ onShowNewsletter, onNavigateToIndian }) => {
         onShowNewsletter();
       }
     } catch (error) {
-      console.error('Error showing newsletter:', error);
+
     }
   };
 
@@ -301,7 +315,7 @@ const Header = ({ onShowNewsletter, onNavigateToIndian }) => {
       setSearchQuery(term);
       addToRecentSearches(term);
     } catch (error) {
-      console.error('Error setting popular search term:', error);
+
     }
   };
 
@@ -312,7 +326,7 @@ const Header = ({ onShowNewsletter, onNavigateToIndian }) => {
       }
       setIsMenuOpen(false);
     } catch (error) {
-      console.error('Error navigating to Indian cuisine:', error);
+
     }
   };
 

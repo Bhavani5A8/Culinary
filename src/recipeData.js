@@ -16,6 +16,8 @@ export const southIndianBreakfast = [
     category: "breakfast",
     calories: 168,
     heatLevel: 2,
+    trending: true,
+    isNew: false,
     ingredients: [
       '2 cups Rice (preferably parboiled)',
       '1/2 cup Urad dal (black gram)',
@@ -59,6 +61,8 @@ export const southIndianBreakfast = [
     category: "breakfast",
     calories: 142,
     heatLevel: 1,
+    trending: false,
+    isNew: false,
     ingredients: [
       '2 cups Rice',
       '1/2 cup Urad dal',
@@ -104,6 +108,8 @@ export const southIndianBreakfast = [
     category: "breakfast",
     calories: 185,
     heatLevel: 2,
+    trending: false,
+    isNew: true,
     ingredients: [
       '2 cups Dosa batter',
       '1 medium Onion (finely chopped)',
@@ -125,6 +131,125 @@ export const southIndianBreakfast = [
       'Serve hot with coconut chutney and sambar.'
     ],
     nutrition: { calories: 185, protein: '4g', carbs: '35g', fat: '3g', fiber: '2g', sugar: '2g' }
+  },
+  {
+    id: "south-4",
+    title: "Medu Vada",
+    description: "Crispy lentil donuts with a fluffy interior, served with coconut chutney and sambar",
+    image: "/images/meduvada.webp",
+    prepTime: "40 mins",
+    servings: 4,
+    rating: 4.6,
+    reviews: 198,
+    tags: ["Traditional", "Vegetarian", "Crispy"],
+    difficulty: "Medium",
+    chef: "Anand Raj",
+    premium: false,
+    category: "breakfast",
+    calories: 210,
+    heatLevel: 1,
+    trending: true,
+    isNew: false,
+    ingredients: [
+      '2 cups Urad dal (soaked 4 hours)',
+      '2 Green chilies (finely chopped)',
+      '1 tsp Cumin seeds',
+      '10 Curry leaves (chopped)',
+      '1 inch Ginger (grated)',
+      '1/4 cup Onion (finely chopped)',
+      'Salt to taste',
+      'Oil for deep frying'
+    ],
+    instructions: [
+      'Drain soaked urad dal and grind to a thick, fluffy batter using minimal water.',
+      'Add chilies, cumin, curry leaves, ginger, onion, and salt. Mix well.',
+      'Wet your hands, take a portion of batter and shape into a ring (donut shape).',
+      'Heat oil to 175°C. Gently slide vadas into hot oil.',
+      'Fry on medium heat for 3-4 minutes per side until golden and crisp.',
+      'Drain on paper towels and serve immediately with chutney and sambar.'
+    ],
+    nutrition: { calories: 210, protein: '9g', carbs: '28g', fat: '8g', fiber: '4g', sugar: '1g' }
+  },
+  {
+    id: "south-5",
+    title: "Pongal",
+    description: "Comforting rice and lentil porridge tempered with ghee, cumin, and black pepper",
+    image: "/images/pongal.webp",
+    prepTime: "25 mins",
+    servings: 4,
+    rating: 4.7,
+    reviews: 143,
+    tags: ["Healthy", "Vegetarian", "Comfort Food"],
+    difficulty: "Easy",
+    chef: "Geetha Sundaram",
+    premium: false,
+    category: "breakfast",
+    calories: 220,
+    heatLevel: 1,
+    trending: false,
+    isNew: false,
+    ingredients: [
+      '1 cup Rice',
+      '1/2 cup Moong dal (split yellow)',
+      '3 tbsp Ghee',
+      '1 tsp Cumin seeds',
+      '1 tsp Black pepper (coarsely ground)',
+      '1 inch Ginger (grated)',
+      '10 Cashews',
+      '10 Curry leaves',
+      'Salt to taste',
+      '4 cups Water'
+    ],
+    instructions: [
+      'Dry roast moong dal until lightly golden. Rinse rice and dal together.',
+      'Pressure cook rice and dal with 4 cups water and salt for 4 whistles.',
+      'Mash lightly to a soft, creamy consistency.',
+      'Heat ghee in a pan, add cashews and fry until golden. Remove and set aside.',
+      'In the same ghee add cumin, pepper, curry leaves, and ginger. Sauté 30 seconds.',
+      'Pour tempering over the pongal, add cashews, mix well, and serve hot.'
+    ],
+    nutrition: { calories: 220, protein: '7g', carbs: '38g', fat: '6g', fiber: '3g', sugar: '1g' }
+  },
+  {
+    id: "south-6",
+    title: "Appam with Stew",
+    description: "Lacy coconut milk rice hoppers served with a fragrant Kerala vegetable stew",
+    image: "/images/appam.webp",
+    prepTime: "35 mins",
+    servings: 4,
+    rating: 4.8,
+    reviews: 112,
+    tags: ["Traditional", "Vegetarian", "Kerala"],
+    difficulty: "Medium",
+    chef: "Latha Menon",
+    premium: false,
+    category: "breakfast",
+    calories: 195,
+    heatLevel: 1,
+    trending: false,
+    isNew: true,
+    ingredients: [
+      '2 cups Raw rice (soaked overnight)',
+      '1/2 cup Cooked rice',
+      '1 cup Coconut milk',
+      '1 tsp Yeast',
+      '1 tsp Sugar',
+      '1/2 tsp Salt',
+      'For stew: 2 cups Mixed vegetables',
+      '1 can Coconut milk',
+      'Whole spices (cardamom, cloves, cinnamon)',
+      '1 tbsp Coconut oil'
+    ],
+    instructions: [
+      'Grind soaked and cooked rice with coconut milk to a smooth batter.',
+      'Add yeast, sugar, salt. Let ferment for 6-8 hours.',
+      'For stew: heat coconut oil, sauté whole spices, add vegetables.',
+      'Add coconut milk, simmer until vegetables are cooked. Season with salt.',
+      'Heat appam pan (appa chatti), pour a ladle of batter and swirl.',
+      'Cover and cook 2 minutes until edges are crisp and centre is soft.',
+      'Serve appam with warm vegetable stew.'
+    ],
+    nutrition: { calories: 195, protein: '4g', carbs: '34g', fat: '5g', fiber: '2g', sugar: '3g' }
   }
 ];
 
@@ -299,148 +424,301 @@ export const featuredRecipes = [
       'Let them soak for at least 2 hours before serving.'
     ],
     nutrition: { calories: 195, protein: '3g', carbs: '35g', fat: '6g', fiber: '0g', sugar: '32g' }
+  },
+  {
+    id: "featured-5",
+    title: "Butter Chicken",
+    description: "Tender chicken in a rich, creamy tomato-based sauce with aromatic spices",
+    image: "/images/butter-chicken.webp",
+    prepTime: "1 hour",
+    cookTime: "30 mins",
+    servings: 4,
+    rating: 4.9,
+    reviews: 512,
+    tags: ["Popular", "Non-Vegetarian", "Creamy"],
+    difficulty: "Medium",
+    chef: "Rajan Kapoor",
+    premium: false,
+    category: "main",
+    calories: 380,
+    heatLevel: 2,
+    trending: true,
+    isNew: false,
+    ingredients: [
+      '750g Chicken (boneless, cubed)',
+      '1 cup Yogurt',
+      '2 tsp Tandoori masala',
+      '3 tbsp Butter',
+      '1 large Onion (pureed)',
+      '2 tsp Ginger-garlic paste',
+      '1 cup Tomato puree',
+      '1/2 cup Heavy cream',
+      '1 tsp Kashmiri red chili powder',
+      '1 tsp Garam masala',
+      '1 tsp Kasuri methi',
+      'Salt to taste'
+    ],
+    instructions: [
+      'Marinate chicken with yogurt and tandoori masala for 1 hour. Grill or pan-fry until charred.',
+      'In a pan, melt butter and sauté pureed onion until golden.',
+      'Add ginger-garlic paste, cook 2 minutes until raw smell leaves.',
+      'Add tomato puree, chili powder, salt. Simmer 15 minutes until oil separates.',
+      'Add grilled chicken pieces, stir to coat with sauce.',
+      'Pour in cream, add garam masala and kasuri methi.',
+      'Simmer on low heat 5 minutes. Adjust seasoning.',
+      'Serve hot with naan or steamed rice.'
+    ],
+    nutrition: { calories: 380, protein: '35g', carbs: '12g', fat: '22g', fiber: '2g', sugar: '6g' }
+  },
+  {
+    id: "featured-6",
+    title: "Dal Makhani",
+    description: "Slow-cooked black lentils in a buttery, smoky tomato gravy — a North Indian classic",
+    image: "/images/dal-makhani.webp",
+    prepTime: "8 hours",
+    cookTime: "45 mins",
+    servings: 6,
+    rating: 4.8,
+    reviews: 341,
+    tags: ["Vegetarian", "Comfort Food", "North Indian"],
+    difficulty: "Easy",
+    chef: "Kavita Malhotra",
+    premium: false,
+    category: "main",
+    calories: 290,
+    heatLevel: 2,
+    trending: false,
+    isNew: false,
+    ingredients: [
+      '1 cup Whole black lentils (urad dal, soaked overnight)',
+      '1/4 cup Rajma (kidney beans, soaked overnight)',
+      '3 tbsp Butter',
+      '1 tbsp Oil',
+      '1 large Onion (finely chopped)',
+      '2 tsp Ginger-garlic paste',
+      '1 cup Tomato puree',
+      '1 tsp Red chili powder',
+      '1/2 cup Cream',
+      'Salt to taste'
+    ],
+    instructions: [
+      'Pressure cook soaked lentils and rajma with salt for 8-10 whistles until very soft.',
+      'Mash lightly — about 1/3 of the lentils should be mashed.',
+      'Heat butter and oil, sauté onion until deep golden.',
+      'Add ginger-garlic paste, cook 2 minutes.',
+      'Add tomato puree, chili powder. Simmer 10 minutes until oil separates.',
+      'Add cooked lentils, stir well. Simmer on low heat 20-30 minutes.',
+      'Stir in cream, adjust salt. Serve with a dollop of butter on top.'
+    ],
+    nutrition: { calories: 290, protein: '14g', carbs: '38g', fat: '10g', fiber: '8g', sugar: '5g' }
+  },
+  {
+    id: "featured-7",
+    title: "Palak Paneer",
+    description: "Fresh cottage cheese cubes in a vibrant, spiced spinach sauce",
+    image: "/images/palak-paneer.webp",
+    prepTime: "30 mins",
+    servings: 4,
+    rating: 4.7,
+    reviews: 267,
+    tags: ["Vegetarian", "Healthy", "North Indian"],
+    difficulty: "Easy",
+    chef: "Anita Verma",
+    premium: false,
+    category: "main",
+    calories: 245,
+    heatLevel: 2,
+    trending: false,
+    isNew: false,
+    ingredients: [
+      '400g Fresh spinach (blanched)',
+      '250g Paneer (cubed)',
+      '2 tbsp Oil',
+      '1 Onion (chopped)',
+      '2 tsp Ginger-garlic paste',
+      '2 Tomatoes (chopped)',
+      '1 tsp Cumin seeds',
+      '1 tsp Coriander powder',
+      '1/2 tsp Garam masala',
+      '2 tbsp Cream',
+      'Salt to taste'
+    ],
+    instructions: [
+      'Blanch spinach in boiling salted water for 2 minutes. Transfer to ice water, then blend smooth.',
+      'Heat oil, add cumin seeds. When they splutter, add onion and cook until golden.',
+      'Add ginger-garlic paste and tomatoes. Cook until oil separates.',
+      'Add all spices, stir 1 minute.',
+      'Pour in spinach puree, mix well. Simmer 5 minutes.',
+      'Add paneer cubes, gently stir. Simmer 3-4 minutes.',
+      'Finish with cream, adjust seasoning. Serve with roti.'
+    ],
+    nutrition: { calories: 245, protein: '16g', carbs: '14g', fat: '15g', fiber: '4g', sugar: '4g' }
+  },
+  {
+    id: "featured-8",
+    title: "Chole Bhature",
+    description: "Spicy chickpea curry served with deep-fried, fluffy leavened bread",
+    image: "/images/chole-bhature.webp",
+    prepTime: "45 mins",
+    servings: 4,
+    rating: 4.8,
+    reviews: 389,
+    tags: ["Popular", "Vegetarian", "Street Food"],
+    difficulty: "Medium",
+    chef: "Harpreet Singh",
+    premium: false,
+    category: "main",
+    calories: 520,
+    heatLevel: 3,
+    trending: true,
+    isNew: false,
+    ingredients: [
+      '2 cups Chickpeas (soaked overnight)',
+      '2 Onions (finely chopped)',
+      '2 Tomatoes (pureed)',
+      '2 tsp Ginger-garlic paste',
+      '2 tsp Chole masala',
+      '1 tsp Amchur (dry mango powder)',
+      'For bhature: 2 cups Maida',
+      '1/4 cup Yogurt',
+      '1 tsp Baking powder',
+      'Oil for frying'
+    ],
+    instructions: [
+      'Pressure cook soaked chickpeas with tea bags for dark color, 5-6 whistles.',
+      'Sauté onions golden, add ginger-garlic paste and tomato puree.',
+      'Add chole masala, amchur, salt. Cook until oil separates.',
+      'Add boiled chickpeas with water. Simmer 15 minutes until thick.',
+      'For bhature: mix maida, yogurt, baking powder, salt and warm water into soft dough.',
+      'Rest 30 minutes. Roll into oval shapes and deep fry until puffed and golden.',
+      'Serve chole topped with onion, lemon, and green chili alongside bhature.'
+    ],
+    nutrition: { calories: 520, protein: '18g', carbs: '72g', fat: '18g', fiber: '12g', sugar: '8g' }
+  },
+  {
+    id: "featured-9",
+    title: "Mango Lassi",
+    description: "Chilled blended drink of ripe alphonso mangoes, yogurt, and cardamom",
+    image: "/images/mango-lassi.webp",
+    prepTime: "10 mins",
+    servings: 2,
+    rating: 4.9,
+    reviews: 445,
+    tags: ["Vegetarian", "Drink", "Summer", "Quick"],
+    difficulty: "Easy",
+    chef: "Pooja Gupta",
+    premium: false,
+    category: "drink",
+    calories: 185,
+    heatLevel: 0,
+    trending: true,
+    isNew: false,
+    ingredients: [
+      '2 large Ripe mangoes (peeled and diced)',
+      '1 cup Thick yogurt',
+      '1/2 cup Milk',
+      '2 tbsp Sugar (adjust to taste)',
+      '1/4 tsp Cardamom powder',
+      'Ice cubes',
+      'Pinch of saffron (optional)'
+    ],
+    instructions: [
+      'Add diced mango, yogurt, milk, sugar, and cardamom to a blender.',
+      'Blend on high until completely smooth and frothy.',
+      'Taste and adjust sweetness.',
+      'Add ice cubes and blend briefly for a chilled version.',
+      'Pour into tall glasses and garnish with a pinch of cardamom and saffron strands.'
+    ],
+    nutrition: { calories: 185, protein: '6g', carbs: '38g', fat: '3g', fiber: '2g', sugar: '34g' }
+  },
+  {
+    id: "featured-10",
+    title: "Chicken Tikka",
+    description: "Chargrilled boneless chicken marinated in yogurt and aromatic spices",
+    image: "/images/chicken-tikka.webp",
+    prepTime: "2 hours",
+    cookTime: "20 mins",
+    servings: 4,
+    rating: 4.8,
+    reviews: 298,
+    tags: ["Popular", "Non-Vegetarian", "Grilled"],
+    difficulty: "Medium",
+    chef: "Sameer Khan",
+    premium: true,
+    category: "starter",
+    calories: 220,
+    heatLevel: 3,
+    trending: false,
+    isNew: true,
+    ingredients: [
+      '600g Boneless chicken (cut into chunks)',
+      '1 cup Yogurt',
+      '2 tbsp Lemon juice',
+      '2 tsp Kashmiri red chili powder',
+      '1 tsp Turmeric',
+      '2 tsp Garam masala',
+      '2 tsp Ginger-garlic paste',
+      '1 tbsp Oil',
+      'Salt to taste',
+      'Chat masala for serving'
+    ],
+    instructions: [
+      'Make slits on chicken pieces for marinade to penetrate.',
+      'Mix all marinade ingredients, coat chicken thoroughly.',
+      'Marinate in fridge for at least 2 hours (overnight for best results).',
+      'Thread onto skewers and grill at high heat, turning every 3-4 minutes.',
+      'Baste with butter midway for extra flavour and colour.',
+      'Grill until charred on edges and cooked through, about 15-20 minutes.',
+      'Sprinkle chat masala, serve with mint chutney and lemon wedges.'
+    ],
+    nutrition: { calories: 220, protein: '32g', carbs: '6g', fat: '8g', fiber: '1g', sugar: '3g' }
   }
 ];
 
-// ✅ FIXED: Enhanced getRecipeDetails function with better error handling and logging
+// Utility: get a single recipe by ID
 export const getRecipeDetails = (recipeId) => {
-  // 🔒 Normalize ID to avoid type mismatches (e.g., '42' vs 42)
-  const _targetId = String(recipeId);
-
-  console.log('🔍 recipeData.js - getRecipeDetails called with ID:', recipeId);
-  
-  try {
-    if (!recipeId) {
-      console.error('❌ recipeData.js - No recipeId provided to getRecipeDetails');
-      return null;
-    }
-
-    // Create combined recipe array
-    const allRecipes = [...southIndianBreakfast, ...featuredRecipes];
-    console.log('📚 recipeData.js - Total recipes available:', allRecipes.length);
-    console.log('📋 recipeData.js - Recipe IDs available:', allRecipes.map(r => r.id));
-
-    // Find recipe by ID
-    const foundRecipe = allRecipes.find(r => r.id === recipeId);
-    
-    if (foundRecipe) {
-      console.log('✅ recipeData.js - Recipe found:', foundRecipe.title);
-      console.log('📝 recipeData.js - Recipe data complete:', {
-        hasTitle: !!foundRecipe.title,
-        hasImage: !!foundRecipe.image,
-        hasIngredients: !!foundRecipe.ingredients,
-        hasInstructions: !!foundRecipe.instructions,
-        ingredientsCount: foundRecipe.ingredients?.length || 0,
-        instructionsCount: foundRecipe.instructions?.length || 0
-      });
-    } else {
-      console.error('❌ recipeData.js - Recipe not found for ID:', recipeId);
-      console.log('🔧 recipeData.js - Available IDs:', allRecipes.map(r => r.id));
-    }
-
-    return foundRecipe || null;
-    
-  } catch (error) {
-    console.error('💥 recipeData.js - Error in getRecipeDetails:', error);
-    return null;
-  }
+  if (!recipeId) return null;
+  const allRecipes = [...southIndianBreakfast, ...featuredRecipes];
+  return allRecipes.find(r => r.id === recipeId) || null;
 };
 
-// ✅ ENHANCED: Additional utility functions for recipe management
+// Utility: filter recipes by category
 export const getRecipesByCategory = (category) => {
-  try {
-    const allRecipes = [...southIndianBreakfast, ...featuredRecipes];
-    return allRecipes.filter(recipe => recipe.category === category);
-  } catch (error) {
-    console.error('Error filtering recipes by category:', error);
-    return [];
-  }
+  const allRecipes = [...southIndianBreakfast, ...featuredRecipes];
+  return allRecipes.filter(recipe => recipe.category === category);
 };
 
+// Utility: full-text search across title, description, tags, chef
 export const searchRecipes = (query) => {
-  try {
-    if (!query) return [...southIndianBreakfast, ...featuredRecipes];
-    
-    const allRecipes = [...southIndianBreakfast, ...featuredRecipes];
-    const searchTerm = query.toLowerCase();
-    
-    return allRecipes.filter(recipe => 
-      recipe.title.toLowerCase().includes(searchTerm) ||
-      recipe.description.toLowerCase().includes(searchTerm) ||
-      recipe.tags?.some(tag => tag.toLowerCase().includes(searchTerm)) ||
-      recipe.chef.toLowerCase().includes(searchTerm)
-    );
-  } catch (error) {
-    console.error('Error searching recipes:', error);
-    return [];
-  }
+  const allRecipes = [...southIndianBreakfast, ...featuredRecipes];
+  if (!query) return allRecipes;
+  const searchTerm = query.toLowerCase();
+  return allRecipes.filter(recipe =>
+    recipe.title.toLowerCase().includes(searchTerm) ||
+    recipe.description.toLowerCase().includes(searchTerm) ||
+    recipe.tags?.some(tag => tag.toLowerCase().includes(searchTerm)) ||
+    recipe.chef.toLowerCase().includes(searchTerm)
+  );
 };
 
+// Utility: trending recipes
 export const getTrendingRecipes = () => {
-  try {
-    const allRecipes = [...southIndianBreakfast, ...featuredRecipes];
-    return allRecipes.filter(recipe => recipe.trending);
-  } catch (error) {
-    console.error('Error getting trending recipes:', error);
-    return [];
-  }
+  const allRecipes = [...southIndianBreakfast, ...featuredRecipes];
+  return allRecipes.filter(recipe => recipe.trending);
 };
 
+// Utility: new recipes
 export const getNewRecipes = () => {
-  try {
-    const allRecipes = [...southIndianBreakfast, ...featuredRecipes];
-    return allRecipes.filter(recipe => recipe.isNew);
-  } catch (error) {
-    console.error('Error getting new recipes:', error);
-    return [];
-  }
+  const allRecipes = [...southIndianBreakfast, ...featuredRecipes];
+  return allRecipes.filter(recipe => recipe.isNew);
 };
 
-// ✅ ENHANCED: Recipe validation function
+// Utility: all recipes combined
+export const getAllRecipes = () => [...southIndianBreakfast, ...featuredRecipes];
+
+// Utility: validate required recipe fields
 export const validateRecipe = (recipe) => {
+  if (!recipe) return false;
   const required = ['id', 'title', 'description', 'image'];
-  const missing = required.filter(field => !recipe[field]);
-  
-  if (missing.length > 0) {
-    console.warn('Recipe validation failed. Missing fields:', missing);
-    return false;
-  }
-  
-  return true;
-};
-
-// Export all recipes for debugging
-export const getAllRecipes = () => {
-  return [...southIndianBreakfast, ...featuredRecipes];
-};
-
-// FIXED: Ensure consistent data access in SouthIndianBreakfast.js
-const handleRecipeClick = (recipeId) => {
-  try {
-    console.log('🎯 SouthIndianBreakfast - handleRecipeClick called with ID:', recipeId);
-    
-    // FIXED: Use allAvailableRecipes instead of just recipes for verification
-    console.log('📊 SouthIndianBreakfast - Available recipes:', allAvailableRecipes.map(r => ({ id: r.id, title: r.title })));
-    
-    if (recipeId) {
-      // FIXED: Verify recipe exists before opening modal
-      const recipeExists = allAvailableRecipes.find(r => r.id === recipeId);
-      if (recipeExists) {
-        setSelectedRecipeId(recipeId);
-        setIsModalOpen(true);
-        
-        if (onRecipeClick) {
-          onRecipeClick(recipeId);
-        }
-        
-        console.log('✅ SouthIndianBreakfast - Modal state set - ID:', recipeId, 'Open:', true);
-      } else {
-        console.error('❌ SouthIndianBreakfast - Recipe not found in available recipes:', recipeId);
-      }
-    } else {
-      console.error('❌ SouthIndianBreakfast - No recipe ID provided');
-    }
-  } catch (error) {
-    console.error('💥 Error handling recipe click in SouthIndianBreakfast:', error);
-  }
+  return required.every(field => !!recipe[field]);
 };

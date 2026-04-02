@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Menu, X, ChefHat, Search, User, Heart, 
   Bell, Gift, Globe, Zap, ChevronDown, Mail,
@@ -742,7 +743,8 @@ const getRecipeDetails = (recipeId) => {
 };
 
 // Main App Component
-const IndianCuisineApp = () => {
+const IndianCuisineApp = ({ onRecipeClick }) => {
+  const navigate = useNavigate();
   const [selectedState, setSelectedState] = useState(null);
   const [selectedRecipeId, setSelectedRecipeId] = useState(null);
   const [showRecipeModal, setShowRecipeModal] = useState(false);
@@ -768,6 +770,8 @@ const IndianCuisineApp = () => {
   const handleRecipeClick = (recipeId) => {
     setSelectedRecipeId(recipeId);
     setShowRecipeModal(true);
+    // Also propagate to parent if provided (e.g. for global RecipeModal)
+    if (onRecipeClick) onRecipeClick(recipeId);
   };
 
   const handleBackToStates = () => {
@@ -806,6 +810,14 @@ const IndianCuisineApp = () => {
                 className="text-gray-700 hover:text-orange-600 relative group"
               >
                 <Search className="w-5 h-5 transition-transform group-hover:scale-110" />
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate('/')}
+                className="hidden md:flex"
+              >
+                ← Back to Home
               </Button>
             </div>
           </div>

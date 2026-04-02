@@ -109,7 +109,7 @@ const NewsletterModal = ({ isOpen, onClose }) => {
         initializeBonusContent();
       }
     } catch (error) {
-      console.error('Error initializing newsletter modal:', error);
+
     }
   }, [isOpen]);
 
@@ -124,7 +124,7 @@ const NewsletterModal = ({ isOpen, onClose }) => {
       };
       setCommunityStats(stats);
     } catch (error) {
-      console.error('Error loading community stats:', error);
+
       // Keep default stats
     }
   };
@@ -133,7 +133,7 @@ const NewsletterModal = ({ isOpen, onClose }) => {
     try {
       setTestimonials(userTestimonials);
     } catch (error) {
-      console.error('Error loading testimonials:', error);
+
     }
   };
 
@@ -141,7 +141,7 @@ const NewsletterModal = ({ isOpen, onClose }) => {
     try {
       setBonusContent(bonusContentItems);
     } catch (error) {
-      console.error('Error initializing bonus content:', error);
+
     }
   };
 
@@ -161,7 +161,7 @@ const NewsletterModal = ({ isOpen, onClose }) => {
       
       return isValid;
     } catch (error) {
-      console.error('Error validating email:', error);
+
       return false;
     }
   };
@@ -172,7 +172,7 @@ const NewsletterModal = ({ isOpen, onClose }) => {
     
     try {
       if (!email || !agreed) {
-        console.warn('Email and agreement are required');
+
         return;
       }
 
@@ -197,7 +197,7 @@ const NewsletterModal = ({ isOpen, onClose }) => {
         handleClose();
       }, 3000);
     } catch (error) {
-      console.error('Error submitting newsletter form:', error);
+
       setLoading(false);
       setCurrentStep(1);
     }
@@ -212,7 +212,7 @@ const NewsletterModal = ({ isOpen, onClose }) => {
           : [...prev, interestId]
       );
     } catch (error) {
-      console.error('Error toggling interest:', error);
+
     }
   };
 
@@ -233,7 +233,7 @@ const NewsletterModal = ({ isOpen, onClose }) => {
         setEmailValidation({ isValid: true, message: '' });
       }, 300);
     } catch (error) {
-      console.error('Error closing newsletter modal:', error);
+
     }
   };
 
@@ -249,7 +249,7 @@ const NewsletterModal = ({ isOpen, onClose }) => {
         setEmailValidation({ isValid: true, message: '' });
       }
     } catch (error) {
-      console.error('Error updating email:', error);
+
     }
   };
 
@@ -257,7 +257,7 @@ const NewsletterModal = ({ isOpen, onClose }) => {
     try {
       setAgreed(e.target.checked);
     } catch (error) {
-      console.error('Error updating agreement:', error);
+
     }
   };
 
@@ -265,7 +265,7 @@ const NewsletterModal = ({ isOpen, onClose }) => {
     try {
       handleClose();
     } catch (error) {
-      console.error('Error handling maybe later:', error);
+
     }
   };
 
@@ -273,7 +273,7 @@ const NewsletterModal = ({ isOpen, onClose }) => {
     try {
       setShowPersonalization(!showPersonalization);
     } catch (error) {
-      console.error('Error toggling personalization:', error);
+
     }
   };
 
