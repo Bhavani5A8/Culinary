@@ -69,48 +69,43 @@ const Modal = ({ isOpen, onClose, title, children, size = 'lg' }) => {
     xl: 'max-w-4xl'
   };
 
-  // FIXED: Simple backdrop click handler - only closes when clicking the backdrop itself
-  const handleBackdropClick = (e) => {
-    // Only close if clicking directly on the backdrop element
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
-
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      {/* FIXED: Single container with backdrop click handler */}
-      <div 
-        className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0"
-      >
-        {/* FIXED: Backdrop overlay with click handler */}
-        <div 
-          className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75 cursor-pointer"
-          onClick={handleBackdropClick}
-        />
-        
-        {/* FIXED: Modal content - no click handlers, just content */}
-        <div 
-          className={`inline-block w-full ${sizeClasses[size]} my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-2xl rounded-2xl relative z-10`}
-        >
-          <div className="flex items-center justify-between p-6 border-b border-gray-200">
-            <h3 className="text-2xl font-bold text-gray-900">{title}</h3>
-            {/* FIXED: Direct close button handler */}
-            <button 
-              onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 hover:scale-110 transition-transform"
-              type="button"
-              aria-label="Close modal"
-            >
-              <X className="w-6 h-6" />
-            </button>
-          </div>
-          <div className="p-6">
-            {children}
+    <>
+      {/* Layer 1: Backdrop — the only element that handles outside clicks.
+          Sits at z-50. Clicking anywhere on it calls onClose directly. */}
+      <div
+        className="fixed inset-0 z-50 bg-gray-500/75"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+
+      {/* Layer 2: Centering shell — same z-50 but pointer-events-none so all
+          clicks pass through to the backdrop above, EXCEPT on the modal box
+          itself which re-enables pointer events and stops propagation. */}
+      <div className="fixed inset-0 z-50 overflow-y-auto pointer-events-none">
+        <div className="flex min-h-full items-center justify-center p-4 sm:p-0">
+          <div
+            className={`pointer-events-auto w-full ${sizeClasses[size]} my-8 overflow-hidden text-left bg-white shadow-2xl rounded-2xl`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <h3 className="text-2xl font-bold text-gray-900">{title}</h3>
+              <button
+                onClick={onClose}
+                className="text-gray-400 hover:text-gray-600 hover:scale-110 transition-transform"
+                type="button"
+                aria-label="Close modal"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="p-6">
+              {children}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
